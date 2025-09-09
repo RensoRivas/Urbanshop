@@ -184,20 +184,42 @@ function initPOS(){
 
 // ======== Dashboard ========
 function initDashboard(){
-  const sales = DB.read('sales', []);
-  const soldToday = sales.filter(s=> new Date(s.date).toDateString() === new Date().toDateString() )
-    .reduce((s,x)=>s+x.total,0);
-  document.getElementById('kpi-sales').textContent = fmt(soldToday);
-  const stock = DB.read('products', []).reduce((s,p)=>s+p.stock,0);
-  document.getElementById('kpi-stock').textContent = stock + ' ítems';
-  document.getElementById('kpi-alerts').textContent = DB.read('products', []).filter(p=>p.stock<=3).length + ' con bajo stock';
+  const kSales  = document.getElementById('kpi-sales');
+  const kStock  = document.getElementById('kpi-stock');
+  const kAlerts = document.getElementById('kpi-alerts');
+  const chartEl = document.getElementById('chart-top');
 
-  const ctx = document.getElementById('chart-top').getContext('2d');
+  if(!kSales || !kStock || !kAlerts){
+    console.warn('IDs KPI faltan en el DOM'); return;
+  }
+
+  const sales = DB.read('sales', []);
+  const products = DB.read('products', []);
+
+  const todayStr = new Date().toDateString();
+  const soldToday = sales
+    .filter(s => new Date(s.date).toDateString() === todayStr)
+    .reduce((sum, s) => sum + (Number(s.total) || 0), 0);
+  kSales.textContent = fmt(soldToday);
+
+  const stock = products.reduce((sum, p) => sum + (Number(p.stock) || 0), 0);
+  kStock.textContent = stock + ' ítems';
+
+  const low = products.filter(p => (Number(p.stock) || 0) <= 3).length;
+  kAlerts.textContent = low + ' con bajo stock';
+
+  if (!chartEl || !chartEl.getContext) { console.warn('Canvas chart-top no encontrado'); return; }
+  const ctx = chartEl.getContext('2d');
+
   const totals = {};
-  for(const s of sales){ for(const i of s.items){ totals[i.name]=(totals[i.name]||0)+i.qty; } }
-  const labels = Object.keys(totals); const values = Object.values(totals);
-  drawBars(ctx, labels, values);
+  for (const s of sales) for (const i of (s.items || []))
+    totals[i.name] = (totals[i.name] || 0) + (Number(i.qty) || 0);
+
+  const labels = Object.keys(totals);
+  const values = Object.values(totals);
+  drawBars(ctx, labels, values); // nuestra drawBars muestra "Sin datos" si está vacío
 }
+
 
 // ======== Reports ========
 // ======== Reports (con filtro y CSV por rango) ========

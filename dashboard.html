@@ -6,7 +6,16 @@
   <title>Dashboard • Sistema</title>
   <link rel="stylesheet" href="assets/css/styles.css"/>
 </head>
-<body onload="requireAuth()">
+
+<script src="assets/js/app.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    requireAuth();
+    initDashboard();
+  });
+</script>
+
+<body >
 <div class="container">
   <aside>
     <h2>🧭 Menú</h2>
