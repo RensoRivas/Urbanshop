@@ -20,6 +20,7 @@
     </nav>
     <div class="helper">Versión prototipo</div>
   </aside>
+
   <div>
     <header>
       <strong>Inventario</strong>
@@ -27,25 +28,73 @@
         <input class="search" placeholder="Buscar..."/>
       </div>
     </header>
+
     <main class="main">
-      
-<div class="toolbar" style="margin-bottom:12px">
-  <input class="search" placeholder="Buscar producto"/>
-  <button class="primary">Agregar</button>
-</div>
-<table>
-  <thead><tr><th>Nombre</th><th>Categoría</th><th>Precio</th><th></th></tr></thead>
-  <tbody>
-    <tr><td>Ejemplo A</td><td>Abrigos</td><td>S/ 120.00</td><td><button>Editar</button></td></tr>
-    <tr><td>Ejemplo B</td><td>Camisetas</td><td>S/ 39.90</td><td><button>Editar</button></td></tr>
-    <tr><td>Ejemplo C</td><td>Pantalones</td><td>S/ 89.00</td><td><button>Editar</button></td></tr>
-  </tbody>
-</table>
+
+      <div class="toolbar" style="margin-bottom:12px">
+        <input id="inv-search" class="search" placeholder="Buscar producto"/>
+        <button id="btn-new-product" class="primary">Agregar</button>
+        <button id="export-inventory" class="ghost">Exportar CSV</button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Categoría</th>
+              <th>Precio</th>
+              <th>Stock</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="inv-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- Modal producto -->
+      <div id="modal-product" class="modal">
+        <div class="panel">
+          <h3>Producto</h3>
+          <form id="form-product">
+            <input type="hidden" name="pid"/>
+            <div class="row">
+              <div>
+                <label>Nombre</label>
+                <input required name="name"/>
+              </div>
+              <div>
+                <label>Categoría</label>
+                <input required name="category"/>
+              </div>
+            </div>
+            <div class="row" style="margin-top:8px">
+              <div>
+                <label>Precio (S/)</label>
+                <input required type="number" min="0" step="0.01" name="price"/>
+              </div>
+              <div>
+                <label>Stock</label>
+                <input required type="number" min="0" step="1" name="stock"/>
+              </div>
+            </div>
+            <footer style="margin-top:12px">
+              <button type="button" class="ghost" onclick="closeModal('modal-product')">Cancelar</button>
+              <button class="primary" type="submit">Guardar</button>
+            </footer>
+          </form>
+        </div>
+      </div>
 
     </main>
+
     <footer>© 2025</footer>
   </div>
 </div>
+
 <script src="assets/js/app.js"></script>
+<script>
+  initInventory();
+</script>
 </body>
 </html>

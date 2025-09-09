@@ -20,6 +20,7 @@
     </nav>
     <div class="helper">Versión prototipo</div>
   </aside>
+
   <div>
     <header>
       <strong>Dashboard</strong>
@@ -27,24 +28,27 @@
         <input class="search" placeholder="Buscar..."/>
       </div>
     </header>
-    <main class="main">
-      
-<div class="grid grid-3">
-  <div class="card"><strong>Ventas del día</strong><p class="helper">₿ 0.00</p></div>
-  <div class="card"><strong>Stock</strong><p class="helper">0 ítems</p></div>
-  <div class="card"><strong>Alertas</strong><p class="helper">Sin alertas</p></div>
-</div>
-<div class="card">
-  <strong>Productos más vendidos</strong>
-  <div style="height:220px;border:1px dashed var(--ring);border-radius:12px;margin-top:12px;display:flex;align-items:center;justify-content:center">
-    <em>Gráfico aquí</em>
-  </div>
-</div>
 
+    <main class="main">
+      <div class="grid grid-3">
+        <div class="card">
+          <strong>Ventas del día</strong>
+          <p id="kpi-sales" class="helper">—</p>
+        </div>
+        <div class="card">
+          <strong>Stock</strong>
+          <p id="kpi-stock" class="helper">—</p>
+        </div>
+        <div class="card">
+          <strong>Alertas</strong>
+          <p id="kpi-alerts" class="helper">—</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <strong>Productos más vendidos</strong>
+        <canvas id="chart-top" class="chart" width="720" height="220"></canvas>
+      </div>
     </main>
-    <footer>© 2025</footer>
-  </div>
-</div>
-<script src="assets/js/app.js"></script>
-</body>
-</html>
+
+    <foot

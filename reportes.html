@@ -1,57 +1,80 @@
 <!doctype html>
 <html lang="es">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Reportes • Sistema</title>
-  <link rel="stylesheet" href="assets/css/styles.css"/>
-</head>
-<body onload="requireAuth()">
-<div class="container">
-  <aside>
-    <h2>🧭 Menú</h2>
-    <nav>
-      <a href="dashboard.html">📊 Dashboard</a>
-      <a href="inventario.html">📦 Inventario</a>
-      <a href="pos.html">🧾 Punto de venta</a>
-      <a href="usuarios.html">👥 Usuarios</a>
-      <a href="reportes.html">📈 Reportes</a>
-      <a href="#" onclick="logout()">⏻ Cerrar sesión</a>
-    </nav>
-    <div class="helper">Versión prototipo</div>
-  </aside>
-  <div>
-    <header>
-      <strong>Reportes</strong>
-      <div class="toolbar">
-        <input class="search" placeholder="Buscar..."/>
-      </div>
-    </header>
-    <main class="main">
-      
-<div class="grid grid-2">
-  <div class="card">
-    <strong>Ventas</strong>
-    <div style="height:220px;border:1px dashed var(--ring);border-radius:12px;margin-top:12px;display:flex;align-items:center;justify-content:center">
-      <em>Gráfico</em>
-    </div>
-  </div>
-  <div class="card">
-    <strong>Inventario Proyectado</strong>
-    <div style="height:220px;border:1px dashed var(--ring);border-radius:12px;margin-top:12px;display:flex;align-items:center;justify-content:center">
-      <em>Gráfico</em>
-    </div>
-  </div>
-</div>
-<div class="toolbar">
-  <button>PDF</button>
-  <button>Excel</button>
-</div>
 
-    </main>
-    <footer>© 2025</footer>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Reportes • Sistema</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+
+<body onload="requireAuth()">
+  <div class="container">
+    <aside>
+      <h2>🧭 Menú</h2>
+      <nav>
+        <a href="dashboard.html">📊 Dashboard</a>
+        <a href="inventario.html">📦 Inventario</a>
+        <a href="pos.html">🧾 Punto de venta</a>
+        <a href="usuarios.html">👥 Usuarios</a>
+        <a href="reportes.html">📈 Reportes</a>
+        <a href="#" onclick="logout()">⏻ Cerrar sesión</a>
+      </nav>
+      <div class="helper">Versión prototipo</div>
+    </aside>
+
+    <div>
+      <header>
+        <strong>Reportes</strong>
+        <div class="toolbar">
+          <input class="search" placeholder="Buscar..." />
+        </div>
+      </header>
+
+      <main class="main">
+
+        <div class="grid grid-2">
+          <div class="card">
+            <strong>Ventas (últimos días)</strong>
+            <canvas id="chart-sales" class="chart" width="720" height="220"></canvas>
+          </div>
+          <div class="card">
+            <strong>Inventario Proyectado</strong>
+            <canvas id="chart-inv" class="chart" width="720" height="220"></canvas>
+          </div>
+        </div>
+
+        <div class="toolbar" style="margin-top:16px">
+          <button id="exp-sales" class="primary">Exportar Ventas (CSV)</button>
+          <button id="exp-print">Imprimir</button>
+        </div>
+
+        <!-- Filtro de fechas -->
+        <div class="card" style="margin-bottom:16px">
+          <div class="toolbar">
+            <div class="helper">Rango:</div>
+            <input type="date" id="rep-from" />
+            <input type="date" id="rep-to" />
+            <button id="rep-apply" class="primary">Aplicar</button>
+            <button id="rep-last7" class="ghost">Últimos 7 días</button>
+            <button id="rep-thismo" class="ghost">Este mes</button>
+          </div>
+        </div>
+
+
+      </main>
+
+      <footer>© 2025</footer>
+    </div>
   </div>
-</div>
-<script src="assets/js/app.js"></script>
+
+  <!-- para probar el boton , demo para mostrar grafico de ventas-->
+  <button onclick="seedSalesDemo(); initReports();" class="ghost">Demo 7 días</button>
+
+  <script src="assets/js/app.js"></script>
+  <script>
+    initReports();
+  </script>
 </body>
+
 </html>

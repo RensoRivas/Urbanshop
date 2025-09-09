@@ -20,6 +20,7 @@
     </nav>
     <div class="helper">Versión prototipo</div>
   </aside>
+
   <div>
     <header>
       <strong>Punto de venta</strong>
@@ -27,27 +28,46 @@
         <input class="search" placeholder="Buscar..."/>
       </div>
     </header>
+
     <main class="main">
-      
-<div class="toolbar" style="margin-bottom:12px">
-  <input class="search" placeholder="Buscar producto por nombre o código"/>
-  <button>+</button>
-</div>
-<table>
-  <thead><tr><th>Nombre del producto</th><th>Cantidad</th><th>Total</th></tr></thead>
-  <tbody>
-    <tr><td>—</td><td>—</td><td>—</td></tr>
-  </tbody>
-</table>
-<div class="toolbar" style="margin-top:12px">
-  <button class="primary">Registrar Venta</button>
-  <button>Denegar</button>
-</div>
+
+      <div class="toolbar" style="margin-bottom:12px">
+        <select id="pos-prod" class="search"></select>
+        <input id="pos-qty" type="number" min="1" step="1" value="1" style="width:100px"/>
+        <button id="pos-add" class="primary">Agregar</button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre del producto</th>
+              <th>Cantidad</th>
+              <th>Total</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="pos-tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="toolbar" style="margin-top:12px;justify-content:space-between">
+        <div><strong>Total:</strong> <span id="pos-total">S/ 0.00</span></div>
+        <div>
+          <button id="pos-register" class="primary">Registrar Venta</button>
+          <button id="pos-cancel">Denegar</button>
+        </div>
+      </div>
 
     </main>
+
     <footer>© 2025</footer>
   </div>
 </div>
+
 <script src="assets/js/app.js"></script>
+<script>
+  initPOS();
+</script>
 </body>
 </html>
