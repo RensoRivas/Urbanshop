@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Gestión de usuarios • Sistema</title>
+  <link rel="stylesheet" href="assets/css/styles.css"/>
+</head>
+<body onload="requireAuth()">
+<div class="container">
+  <aside>
+    <h2>🧭 Menú</h2>
+    <nav>
+      <a href="dashboard.html">📊 Dashboard</a>
+      <a href="inventario.html">📦 Inventario</a>
+      <a href="pos.html">🧾 Punto de venta</a>
+      <a href="usuarios.html">👥 Usuarios</a>
+      <a href="reportes.html">📈 Reportes</a>
+      <a href="#" onclick="logout()">⏻ Cerrar sesión</a>
+    </nav>
+    <div class="helper">Versión prototipo</div>
+  </aside>
+  <div>
+    <header>
+      <strong>Gestión de usuarios</strong>
+      <div class="toolbar">
+        <input class="search" placeholder="Buscar..."/>
+      </div>
+    </header>
+    <main class="main">
+      
+<div class="toolbar" style="margin-bottom:12px">
+  <button class="primary">Crear Usuario</button>
+</div>
+<table>
+  <thead><tr><th>Nombre</th><th>Rol</th><th>Estado</th></tr></thead>
+  <tbody>
+    <tr><td>Ana Pérez</td><td>Admin</td><td>Activo</td></tr>
+    <tr><td>Juan Díaz</td><td>Vendedor</td><td>Activo</td></tr>
+    <tr><td>María Cruz</td><td>Supervisor</td><td>Inactivo</td></tr>
+  </tbody>
+</table>
+<div class="card"><strong>Inventario Proyectado</strong><p class="helper">Sección para KPIs o notas.</p></div>
+
+    </main>
+    <footer>© 2025</footer>
+  </div>
+</div>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

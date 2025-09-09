@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Login • Sistema</title>
+  <link rel="stylesheet" href="assets/css/styles.css"/>
+</head>
+<body>
+  <div class="login-wrap">
+    <h1>🔐 Login</h1>
+    <p class="helper">Ingresa tus credenciales para continuar.</p>
+    <form id="loginForm">
+      <div class="card">
+        <label>Usuario</label><br/>
+        <input id="user" placeholder="usuario"/>
+      </div>
+      <div class="card">
+        <label>Contraseña</label><br/>
+        <input id="pass" type="password" placeholder="•••••••"/>
+      </div>
+      <div class="toolbar">
+        <button type="submit" class="primary">Iniciar sesión</button>
+        <a href="#" class="helper">¿Olvidó su contraseña?</a>
+      </div>
+    </form>
+  </div>
+<script>
+document.getElementById('loginForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  // Prototipo: acepta cualquier usuario/clave no vacíos
+  const u = document.getElementById('user').value.trim();
+  const p = document.getElementById('pass').value.trim();
+  if(u && p){ localStorage.setItem('auth','ok'); location.href='dashboard.html'; }
+  else { alert('Complete usuario y contraseña'); }
+});
+</script>
+</body>
+</html>

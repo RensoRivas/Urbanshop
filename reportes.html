@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Reportes • Sistema</title>
+  <link rel="stylesheet" href="assets/css/styles.css"/>
+</head>
+<body onload="requireAuth()">
+<div class="container">
+  <aside>
+    <h2>🧭 Menú</h2>
+    <nav>
+      <a href="dashboard.html">📊 Dashboard</a>
+      <a href="inventario.html">📦 Inventario</a>
+      <a href="pos.html">🧾 Punto de venta</a>
+      <a href="usuarios.html">👥 Usuarios</a>
+      <a href="reportes.html">📈 Reportes</a>
+      <a href="#" onclick="logout()">⏻ Cerrar sesión</a>
+    </nav>
+    <div class="helper">Versión prototipo</div>
+  </aside>
+  <div>
+    <header>
+      <strong>Reportes</strong>
+      <div class="toolbar">
+        <input class="search" placeholder="Buscar..."/>
+      </div>
+    </header>
+    <main class="main">
+      
+<div class="grid grid-2">
+  <div class="card">
+    <strong>Ventas</strong>
+    <div style="height:220px;border:1px dashed var(--ring);border-radius:12px;margin-top:12px;display:flex;align-items:center;justify-content:center">
+      <em>Gráfico</em>
+    </div>
+  </div>
+  <div class="card">
+    <strong>Inventario Proyectado</strong>
+    <div style="height:220px;border:1px dashed var(--ring);border-radius:12px;margin-top:12px;display:flex;align-items:center;justify-content:center">
+      <em>Gráfico</em>
+    </div>
+  </div>
+</div>
+<div class="toolbar">
+  <button>PDF</button>
+  <button>Excel</button>
+</div>
+
+    </main>
+    <footer>© 2025</footer>
+  </div>
+</div>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

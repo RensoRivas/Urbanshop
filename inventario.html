@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Inventario • Sistema</title>
+  <link rel="stylesheet" href="assets/css/styles.css"/>
+</head>
+<body onload="requireAuth()">
+<div class="container">
+  <aside>
+    <h2>🧭 Menú</h2>
+    <nav>
+      <a href="dashboard.html">📊 Dashboard</a>
+      <a href="inventario.html">📦 Inventario</a>
+      <a href="pos.html">🧾 Punto de venta</a>
+      <a href="usuarios.html">👥 Usuarios</a>
+      <a href="reportes.html">📈 Reportes</a>
+      <a href="#" onclick="logout()">⏻ Cerrar sesión</a>
+    </nav>
+    <div class="helper">Versión prototipo</div>
+  </aside>
+  <div>
+    <header>
+      <strong>Inventario</strong>
+      <div class="toolbar">
+        <input class="search" placeholder="Buscar..."/>
+      </div>
+    </header>
+    <main class="main">
+      
+<div class="toolbar" style="margin-bottom:12px">
+  <input class="search" placeholder="Buscar producto"/>
+  <button class="primary">Agregar</button>
+</div>
+<table>
+  <thead><tr><th>Nombre</th><th>Categoría</th><th>Precio</th><th></th></tr></thead>
+  <tbody>
+    <tr><td>Ejemplo A</td><td>Abrigos</td><td>S/ 120.00</td><td><button>Editar</button></td></tr>
+    <tr><td>Ejemplo B</td><td>Camisetas</td><td>S/ 39.90</td><td><button>Editar</button></td></tr>
+    <tr><td>Ejemplo C</td><td>Pantalones</td><td>S/ 89.00</td><td><button>Editar</button></td></tr>
+  </tbody>
+</table>
+
+    </main>
+    <footer>© 2025</footer>
+  </div>
+</div>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
