@@ -10,30 +10,43 @@
   <div class="login-wrap">
     <h1>🔐 Login</h1>
     <p class="helper">Ingresa tus credenciales para continuar.</p>
+
     <form id="loginForm">
       <div class="card">
         <label>Usuario</label><br/>
-        <input id="user" placeholder="usuario"/>
+        <input id="user" placeholder="usuario" autocomplete="username" required/>
       </div>
+
       <div class="card">
         <label>Contraseña</label><br/>
-        <input id="pass" type="password" placeholder="•••••••"/>
+        <input id="pass" type="password" placeholder="•••••••" autocomplete="current-password" required/>
       </div>
+
       <div class="toolbar">
         <button type="submit" class="primary">Iniciar sesión</button>
-        <a href="#" class="helper">¿Olvidó su contraseña?</a>
+        <a href="#" class="helper" title="Demo">¿Olvidó su contraseña?</a>
       </div>
     </form>
+
+    <p class="helper" style="margin-top:12px">
+      Demo: acepta cualquier usuario/contraseña no vacíos.
+    </p>
   </div>
-<script>
-document.getElementById('loginForm').addEventListener('submit', function(e){
-  e.preventDefault();
-  // Prototipo: acepta cualquier usuario/clave no vacíos
-  const u = document.getElementById('user').value.trim();
-  const p = document.getElementById('pass').value.trim();
-  if(u && p){ localStorage.setItem('auth','ok'); location.href='dashboard.html'; }
-  else { alert('Complete usuario y contraseña'); }
-});
-</script>
+
+  <script src="assets/js/app.js"></script>
+  <script>
+    // Login de demostración: guarda un flag en localStorage y redirige al dashboard
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const u = document.getElementById('user').value.trim();
+      const p = document.getElementById('pass').value.trim();
+      if (u && p) {
+        localStorage.setItem('auth', 'ok');
+        location.href = 'dashboard.html';
+      } else {
+        alert('Complete usuario y contraseña');
+      }
+    });
+  </script>
 </body>
 </html>

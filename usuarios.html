@@ -20,6 +20,7 @@
     </nav>
     <div class="helper">Versión prototipo</div>
   </aside>
+
   <div>
     <header>
       <strong>Gestión de usuarios</strong>
@@ -27,25 +28,78 @@
         <input class="search" placeholder="Buscar..."/>
       </div>
     </header>
+
     <main class="main">
-      
-<div class="toolbar" style="margin-bottom:12px">
-  <button class="primary">Crear Usuario</button>
-</div>
-<table>
-  <thead><tr><th>Nombre</th><th>Rol</th><th>Estado</th></tr></thead>
-  <tbody>
-    <tr><td>Ana Pérez</td><td>Admin</td><td>Activo</td></tr>
-    <tr><td>Juan Díaz</td><td>Vendedor</td><td>Activo</td></tr>
-    <tr><td>María Cruz</td><td>Supervisor</td><td>Inactivo</td></tr>
-  </tbody>
-</table>
-<div class="card"><strong>Inventario Proyectado</strong><p class="helper">Sección para KPIs o notas.</p></div>
+
+      <div class="toolbar" style="margin-bottom:12px">
+        <button id="btn-new-user" class="primary">Crear Usuario</button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Rol</th>
+              <th>Estado</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="usr-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- Modal para crear/editar usuario -->
+      <div id="modal-user" class="modal">
+        <div class="panel">
+          <h3>Usuario</h3>
+          <form id="form-user">
+            <input type="hidden" name="uid"/>
+            <div class="row">
+              <div>
+                <label>Nombre</label>
+                <input required name="name"/>
+              </div>
+              <div>
+                <label>Rol</label>
+                <select name="role">
+                  <option>Admin</option>
+                  <option>Vendedor</option>
+                  <option>Supervisor</option>
+                </select>
+              </div>
+            </div>
+            <div class="row" style="margin-top:8px">
+              <div>
+                <label>Estado</label>
+                <select name="status">
+                  <option>Activo</option>
+                  <option>Inactivo</option>
+                </select>
+              </div>
+            </div>
+            <footer style="margin-top:12px">
+              <button type="button" class="ghost" onclick="closeModal('modal-user')">Cancelar</button>
+              <button class="primary" type="submit">Guardar</button>
+            </footer>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <strong>Inventario Proyectado</strong>
+        <p class="helper">KPIs o notas del equipo.</p>
+      </div>
 
     </main>
+
     <footer>© 2025</footer>
   </div>
 </div>
+
 <script src="assets/js/app.js"></script>
+<script>
+  initUsers();
+</script>
 </body>
 </html>
