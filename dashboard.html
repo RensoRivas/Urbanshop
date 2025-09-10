@@ -1,54 +1,74 @@
 <!doctype html>
 <html lang="es">
+
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Dashboard • Sistema</title>
-  <link rel="stylesheet" href="assets/css/styles.css"/>
+  <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
-<body onload="requireAuth()">
-<div class="container">
-  <aside>
-    <h2>🧭 Menú</h2>
-    <nav>
-      <a href="dashboard.html">📊 Dashboard</a>
-      <a href="inventario.html">📦 Inventario</a>
-      <a href="pos.html">🧾 Punto de venta</a>
-      <a href="usuarios.html">👥 Usuarios</a>
-      <a href="reportes.html">📈 Reportes</a>
-      <a href="#" onclick="logout()">⏻ Cerrar sesión</a>
-    </nav>
-    <div class="helper">Versión prototipo</div>
-  </aside>
 
-  <div>
-    <header>
-      <strong>Dashboard</strong>
-      <div class="toolbar">
-        <input class="search" placeholder="Buscar..."/>
-      </div>
-    </header>
+  <!-- Topbar con sesión -->
+  <header class="topbar" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+    <h2>Dashboard</h2>
+    <div id="session-info" class="session-info" style="font-size:14px; color:#374151;">
+      <!-- Aquí se mostrará el usuario y rol -->
+    </div>
+  </header>
 
-    <main class="main">
-      <div class="grid grid-3">
-        <div class="card">
-          <strong>Ventas del día</strong>
-          <p id="kpi-sales" class="helper">—</p>
+  <div class="container">
+    <aside>
+      <h2>🧭 Menú</h2>
+      <nav>
+        <a href="dashboard.html">📊 Dashboard</a>
+        <a href="inventario.html">📦 Inventario</a>
+        <a href="pos.html">🧾 Punto de venta</a>
+        <a href="usuarios.html">👥 Usuarios</a>
+        <a href="reportes.html">📈 Reportes</a>
+        <a href="#" onclick="logout()">⏻ Cerrar sesión</a>
+      </nav>
+      <div class="helper">Versión prototipo</div>
+    </aside>
+
+    <div>
+      <header>
+        <strong>Dashboard</strong>
+        <div class="toolbar">
+          <input class="search" placeholder="Buscar..." />
         </div>
-        <div class="card">
-          <strong>Stock</strong>
-          <p id="kpi-stock" class="helper">—</p>
-        </div>
-        <div class="card">
-          <strong>Alertas</strong>
-          <p id="kpi-alerts" class="helper">—</p>
-        </div>
-      </div>
+      </header>
 
-      <div class="card">
-        <strong>Productos más vendidos</strong>
-        <canvas id="chart-top" class="chart" width="720" height="220"></canvas>
-      </div>
-    </main>
+      <main class="main">
+        <div class="grid grid-3">
+          <div class="card">
+            <strong>Ventas del día</strong>
+            <p id="kpi-sales" class="helper">—</p>
+          </div>
+          <div class="card">
+            <strong>Stock</strong>
+            <p id="kpi-stock" class="helper">—</p>
+          </div>
+          <div class="card">
+            <strong>Alertas</strong>
+            <p id="kpi-alerts" class="helper">—</p>
+          </div>
+        </div>
 
-    <foot
+        <div class="card">
+          <strong>Productos más vendidos</strong>
+          <canvas id="chart-top" class="chart" width="720" height="220"></canvas>
+        </div>
+      </main>
+    </div>
+  </div>
+
+<script src="assets/js/app.js"></script>
+<script>
+  requireAuth(['Admin','Supervisor','Vendedor']);
+  renderSessionBar('Dashboard');
+  initDashboard();
+</script>
+
+</body>
+
+</html>

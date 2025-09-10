@@ -1,105 +1,132 @@
 <!doctype html>
 <html lang="es">
+
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Gestión de usuarios • Sistema</title>
-  <link rel="stylesheet" href="assets/css/styles.css"/>
+  <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
+
+<header class="topbar" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+  <h2><!-- se completa por JS --></h2>
+  <div id="session-info" class="session-info" style="font-size:14px; color:#374151;"></div>
+</header>
+
 <body onload="requireAuth()">
-<div class="container">
-  <aside>
-    <h2>🧭 Menú</h2>
-    <nav>
-      <a href="dashboard.html">📊 Dashboard</a>
-      <a href="inventario.html">📦 Inventario</a>
-      <a href="pos.html">🧾 Punto de venta</a>
-      <a href="usuarios.html">👥 Usuarios</a>
-      <a href="reportes.html">📈 Reportes</a>
-      <a href="#" onclick="logout()">⏻ Cerrar sesión</a>
-    </nav>
-    <div class="helper">Versión prototipo</div>
-  </aside>
+  <div class="container">
+    <aside>
+      <h2>🧭 Menú</h2>
+      <nav>
+        <a href="dashboard.html">📊 Dashboard</a>
+        <a href="inventario.html">📦 Inventario</a>
+        <a href="pos.html">🧾 Punto de venta</a>
+        <a href="usuarios.html">👥 Usuarios</a>
+        <a href="reportes.html">📈 Reportes</a>
+        <a href="#" onclick="logout()">⏻ Cerrar sesión</a>
+      </nav>
+      <div class="helper">Versión prototipo</div>
+    </aside>
 
-  <div>
-    <header>
-      <strong>Gestión de usuarios</strong>
-      <div class="toolbar">
-        <input class="search" placeholder="Buscar..."/>
-      </div>
-    </header>
-
-    <main class="main">
-
-      <div class="toolbar" style="margin-bottom:12px">
-        <button id="btn-new-user" class="primary">Crear Usuario</button>
-      </div>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Rol</th>
-              <th>Estado</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="usr-tbody"></tbody>
-        </table>
-      </div>
-
-      <!-- Modal para crear/editar usuario -->
-      <div id="modal-user" class="modal">
-        <div class="panel">
-          <h3>Usuario</h3>
-          <form id="form-user">
-            <input type="hidden" name="uid"/>
-            <div class="row">
-              <div>
-                <label>Nombre</label>
-                <input required name="name"/>
-              </div>
-              <div>
-                <label>Rol</label>
-                <select name="role">
-                  <option>Admin</option>
-                  <option>Vendedor</option>
-                  <option>Supervisor</option>
-                </select>
-              </div>
-            </div>
-            <div class="row" style="margin-top:8px">
-              <div>
-                <label>Estado</label>
-                <select name="status">
-                  <option>Activo</option>
-                  <option>Inactivo</option>
-                </select>
-              </div>
-            </div>
-            <footer style="margin-top:12px">
-              <button type="button" class="ghost" onclick="closeModal('modal-user')">Cancelar</button>
-              <button class="primary" type="submit">Guardar</button>
-            </footer>
-          </form>
+    <div>
+      <header>
+        <strong>Gestión de usuarios</strong>
+        <div class="toolbar">
+          <input class="search" placeholder="Buscar..." />
         </div>
-      </div>
+      </header>
 
-      <div class="card">
-        <strong>Inventario Proyectado</strong>
-        <p class="helper">KPIs o notas del equipo.</p>
-      </div>
+      <main class="main">
 
-    </main>
+        <div class="toolbar" style="margin-bottom:12px">
+          <button id="btn-new-user" class="primary">Crear Usuario</button>
+        </div>
 
-    <footer>© 2025</footer>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Rol</th>
+                <th>Estado</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="usr-tbody"></tbody>
+          </table>
+        </div>
+
+        <!-- Modal para crear/editar usuario -->
+        <div id="modal-user" class="modal">
+          <div class="panel">
+            <h3>Usuario</h3>
+            <form id="form-user">
+              <input type="hidden" name="uid" />
+
+              <div class="row">
+                <div>
+                  <label>Nombre</label>
+                  <input required name="name" />
+                </div>
+                <div>
+                  <label>Rol</label>
+                  <select name="role">
+                    <option>Admin</option>
+                    <option>Vendedor</option>
+                    <option>Supervisor</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row" style="margin-top:8px">
+                <div>
+                  <label>Estado</label>
+                  <select name="status">
+                    <option>Activo</option>
+                    <option>Inactivo</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Usuario (para login)</label>
+                  <input name="username" placeholder="ej: jperez" />
+                </div>
+              </div>
+
+              <div class="row" style="margin-top:8px">
+                <div style="flex:1">
+                  <label>Contraseña (para login)</label>
+                  <input type="password" name="password" placeholder="•••••••" />
+                </div>
+              </div>
+
+              <footer style="margin-top:12px; display:flex; justify-content:flex-end; gap:8px;">
+                <button type="button" class="ghost" onclick="closeModal('modal-user')">Cancelar</button>
+                <button class="primary" type="submit">Guardar</button>
+              </footer>
+            </form>
+
+
+          </div>
+        </div>
+
+        <div class="card">
+          <strong>Inventario Proyectado</strong>
+          <p class="helper">KPIs o notas del equipo.</p>
+        </div>
+
+      </main>
+
+      <footer>© 2025</footer>
+    </div>
   </div>
-</div>
 
 <script src="assets/js/app.js"></script>
 <script>
+  requireAuth(['Admin']);
+  renderSessionBar('Gestión de usuarios');
   initUsers();
 </script>
+
 </body>
+
 </html>

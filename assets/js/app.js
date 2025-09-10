@@ -24,6 +24,31 @@ const DB = {
   if(!localStorage.getItem('sales')) DB.write('sales', []);
 })();
 
+// Cuentas para login (usuario/contraseña) ligadas por el mismo id que "users"
+const Accounts = {
+  read(){ return DB.read('accounts', []); },
+  write(list){ DB.write('accounts', list); },
+  findById(id){ return this.read().find(a=>a.id===id); },
+  findByUsername(username){ return this.read().find(a=>a.username?.toLowerCase() === String(username).toLowerCase()); },
+  upsert({id, username, password}){
+    const list = this.read();
+    const i = list.findIndex(a=>a.id===id);
+    if(!username){ // si quitan usuario, eliminamos cuenta
+      if(i>=0) list.splice(i,1);
+      this.write(list);
+      return;
+    }
+    if(i>=0){
+      // si no pasan password, mantener el anterior
+      list[i].username = username;
+      if(password) list[i].password = password;
+    }else{
+      list.push({ id, username, password: password||'' });
+    }
+    this.write(list);
+  }
+};
+
 // ======== Nav active ========
 (function(){
   const path = location.pathname.split('/').pop() || 'index.html';
@@ -32,9 +57,70 @@ const DB = {
   });
 })();
 
-// ======== Auth ========
-function requireAuth(){ if(!localStorage.getItem('auth')) location.href='index.html'; }
+// ======== Auth + RBAC ========
+const ACL = {
+  'dashboard.html': ['Admin','Supervisor','Vendedor'],
+  'pos.html'       : ['Admin','Supervisor','Vendedor'],
+  'inventario.html': ['Admin','Supervisor'],
+  'usuarios.html'  : ['Admin'],
+  'reportes.html'  : ['Admin','Supervisor']
+};
+
+function getSession(){
+  try { return JSON.parse(localStorage.getItem('auth')); } catch { return null; }
+}
+function setSession(s){ localStorage.setItem('auth', JSON.stringify(s)); }
+
+function requireAuth(allowedRoles=null){
+  const me = getSession();
+  if(!me){ location.href = 'index.html'; return; }
+
+  // Si la página tiene restricción, validamos
+  const path = (location.pathname.split('/').pop() || 'dashboard.html');
+  const pageRoles = allowedRoles || ACL[path] || null;
+  if (pageRoles && !pageRoles.includes(me.role)) {
+    // sin permiso → redirigimos al Dashboard
+    alert('No tienes permisos para acceder a esta sección.');
+    location.href = 'dashboard.html';
+    return;
+  }
+
+  // Ocultar del menú lo que no pueda ver
+  applyRoleUI(me.role);
+}
+
+function applyRoleUI(role){
+  const canSee = (file)=> (ACL[file]||['Admin','Supervisor','Vendedor']).includes(role);
+  const q = (sel) => document.querySelector(sel);
+
+  const links = [
+    ['dashboard.html', 'a[href$="dashboard.html"]'],
+    ['inventario.html','a[href$="inventario.html"]'],
+    ['pos.html',       'a[href$="pos.html"]'],
+    ['usuarios.html',  'a[href$="usuarios.html"]'],
+    ['reportes.html',  'a[href$="reportes.html"]'],
+  ];
+  links.forEach(([file, sel])=>{
+    const el = q(sel);
+    if(el){ el.style.display = canSee(file) ? '' : 'none'; }
+  });
+}
 function logout(){ localStorage.removeItem('auth'); location.href='index.html'; }
+
+// Monta barra superior con nombre/rol (y sin botón rojo)
+function renderSessionBar(titleText){
+  const wrap = document.querySelector('.topbar');
+  if(!wrap) return;
+  const me = getSession && getSession();
+  // título (si el <h2> existe lo actualizamos)
+  const h2 = wrap.querySelector('h2'); if(h2 && titleText) h2.textContent = titleText;
+  // info de sesión
+  const box = document.getElementById('session-info');
+  if (me && box) {
+    box.innerHTML = `👤 <strong>${me.name || me.username || 'Usuario'}</strong>
+      <span style="color:#6b7280">(${me.role || '—'})</span>`;
+  }
+}
 
 // ======== UI Helpers ========
 function openModal(id){ document.getElementById(id).classList.add('open'); }
@@ -103,29 +189,71 @@ function initUsers(){
   function render(){
     const users = DB.read('users', []);
     tbody.innerHTML = users.map(u=>`<tr>
-      <td>${u.name}</td><td>${u.role}</td><td><span class="badge ${u.status==='Activo'?'ok':''}">${u.status}</span></td>
-      <td><button class="edit" data-id="${u.id}">Editar</button> <button class="danger del" data-id="${u.id}">Borrar</button></td>
+      <td>${u.name}</td>
+      <td>${u.role}</td>
+      <td><span class="badge ${u.status==='Activo'?'ok':''}">${u.status}</span></td>
+      <td>
+        <button class="edit" data-id="${u.id}">Editar</button>
+        <button class="danger del" data-id="${u.id}">Borrar</button>
+      </td>
     </tr>`).join('');
   }
   render();
-  btnNew.addEventListener('click', ()=>{ form.reset(); editingId=null; openModal('modal-user'); });
+
+  btnNew.addEventListener('click', ()=>{
+    form.reset();
+    editingId=null;
+    openModal('modal-user');
+  });
+
+  // 🔹 Editar / Borrar
   tbody.addEventListener('click', e=>{
     const id=e.target.getAttribute('data-id'); if(!id) return;
     if(e.target.classList.contains('edit')){
       const u = DB.read('users', []).find(x=>x.id===id);
-      editingId=id; form.uid.value=id; form.name.value=u.name; form.role.value=u.role; form.status.value=u.status;
+      const acc = Accounts.findById(id); // buscamos si tiene credenciales
+      editingId=id;
+      form.uid.value=id;
+      form.name.value=u.name;
+      form.role.value=u.role;
+      form.status.value=u.status;
+      form.username.value = acc?.username || '';
+      form.password.value = ''; // nunca rellenar por seguridad
       openModal('modal-user');
     } else if(e.target.classList.contains('del')){
-      if(confirm('¿Eliminar usuario?')){ DB.write('users', DB.read('users', []).filter(x=>x.id!==id)); render(); }
+      if(confirm('¿Eliminar usuario?')){
+        DB.write('users', DB.read('users', []).filter(x=>x.id!==id));
+        // 🔹 borrar también cuenta asociada
+        const list = Accounts.read().filter(a=>a.id!==id);
+        Accounts.write(list);
+        render();
+      }
     }
   });
+
+  // 🔹 Guardar
   form.addEventListener('submit', e=>{
     e.preventDefault();
-    const data = { id: editingId || DB.uid(), name: form.name.value, role: form.role.value, status: form.status.value };
+    const data = { 
+      id: editingId || DB.uid(), 
+      name: form.name.value, 
+      role: form.role.value, 
+      status: form.status.value 
+    };
+    const username = (form.username.value||'').trim();
+    const password = (form.password.value||'').trim();
+
+    // guardar usuario
     const users = DB.read('users', []);
     const idx = users.findIndex(x=>x.id===data.id);
     if(idx>=0) users[idx]=data; else users.push(data);
-    DB.write('users', users); closeModal('modal-user'); render();
+    DB.write('users', users);
+
+    // guardar/actualizar credenciales
+    Accounts.upsert({ id: data.id, username, password });
+
+    closeModal('modal-user');
+    render();
   });
 }
 
@@ -184,20 +312,42 @@ function initPOS(){
 
 // ======== Dashboard ========
 function initDashboard(){
-  const sales = DB.read('sales', []);
-  const soldToday = sales.filter(s=> new Date(s.date).toDateString() === new Date().toDateString() )
-    .reduce((s,x)=>s+x.total,0);
-  document.getElementById('kpi-sales').textContent = fmt(soldToday);
-  const stock = DB.read('products', []).reduce((s,p)=>s+p.stock,0);
-  document.getElementById('kpi-stock').textContent = stock + ' ítems';
-  document.getElementById('kpi-alerts').textContent = DB.read('products', []).filter(p=>p.stock<=3).length + ' con bajo stock';
+  const kSales  = document.getElementById('kpi-sales');
+  const kStock  = document.getElementById('kpi-stock');
+  const kAlerts = document.getElementById('kpi-alerts');
+  const chartEl = document.getElementById('chart-top');
 
-  const ctx = document.getElementById('chart-top').getContext('2d');
+  if(!kSales || !kStock || !kAlerts){
+    console.warn('IDs KPI faltan en el DOM'); return;
+  }
+
+  const sales = DB.read('sales', []);
+  const products = DB.read('products', []);
+
+  const todayStr = new Date().toDateString();
+  const soldToday = sales
+    .filter(s => new Date(s.date).toDateString() === todayStr)
+    .reduce((sum, s) => sum + (Number(s.total) || 0), 0);
+  kSales.textContent = fmt(soldToday);
+
+  const stock = products.reduce((sum, p) => sum + (Number(p.stock) || 0), 0);
+  kStock.textContent = stock + ' ítems';
+
+  const low = products.filter(p => (Number(p.stock) || 0) <= 3).length;
+  kAlerts.textContent = low + ' con bajo stock';
+
+  if (!chartEl || !chartEl.getContext) { console.warn('Canvas chart-top no encontrado'); return; }
+  const ctx = chartEl.getContext('2d');
+
   const totals = {};
-  for(const s of sales){ for(const i of s.items){ totals[i.name]=(totals[i.name]||0)+i.qty; } }
-  const labels = Object.keys(totals); const values = Object.values(totals);
-  drawBars(ctx, labels, values);
+  for (const s of sales) for (const i of (s.items || []))
+    totals[i.name] = (totals[i.name] || 0) + (Number(i.qty) || 0);
+
+  const labels = Object.keys(totals);
+  const values = Object.values(totals);
+  drawBars(ctx, labels, values); // nuestra drawBars muestra "Sin datos" si está vacío
 }
+
 
 // ======== Reports ========
 // ======== Reports (con filtro y CSV por rango) ========
