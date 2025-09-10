@@ -6,6 +6,12 @@
   <title>Inventario • Sistema</title>
   <link rel="stylesheet" href="assets/css/styles.css"/>
 </head>
+
+<header class="topbar" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+  <h2><!-- se completa por JS --></h2>
+  <div id="session-info" class="session-info" style="font-size:14px; color:#374151;"></div>
+</header>
+
 <body onload="requireAuth()">
 <div class="container">
   <aside>
@@ -94,7 +100,10 @@
 
 <script src="assets/js/app.js"></script>
 <script>
+  requireAuth(['Admin','Supervisor']);
+  renderSessionBar('Inventario');
   initInventory();
 </script>
+
 </body>
 </html>
